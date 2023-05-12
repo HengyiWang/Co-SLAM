@@ -1,0 +1,15 @@
+inherit_from: configs/Synthetic/synthetic.yaml
+mapping:
+  bound: [[-5.7, 3.8],[-0.2, 3.3],[-6.6, 3.6]]
+  marching_cubes_bound: [[-5.7, 3.8],[-0.2, 3.3],[-6.6, 3.6]]
+  
+
+data:
+  datadir: data/neural_rgbd_data/complete_kitchen
+  trainskip: 1
+  output: output/Synthetic/ck
+  exp_name: demo
+
+cam:
+  near: 0
+  far: 8

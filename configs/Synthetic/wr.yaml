@@ -1,0 +1,15 @@
+inherit_from: configs/Synthetic/synthetic.yaml
+mapping:
+  bound: [[-2.6, 3.2],[-0.4, 3.6],[0.5, 8.3]]
+  marching_cubes_bound: [[-2.6, 3.2],[-0.4, 3.6],[0.5, 8.3]]
+  
+
+data:
+  datadir: data/neural_rgbd_data/whiteroom
+  trainskip: 1
+  output: output/Synthetic/wr
+  exp_name: demo
+
+cam:
+  near: 0
+  far: 8

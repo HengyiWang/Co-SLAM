@@ -1,0 +1,27 @@
+inherit_from: configs/ScanNet/scannet.yaml
+mapping:
+  bound: [[0.5,9.1],[-0.3,7.8],[-0.3,2.7]]
+  marching_cubes_bound: [[0.5,9.1],[-0.3,7.8],[-0.3,2.7]]
+
+  
+grid:
+  hash_size: 16 # 1.59M
+
+data:
+  datadir: ./data/scannet/scene0169_00
+  trainskip: 1
+  output: output/scannet/scene0169_00
+  exp_name: demo
+
+
+cam:
+  H: 480
+  W: 640
+  fx: 574.540771
+  fy: 577.583740
+  cx: 322.522827
+  cy: 238.558853
+  png_depth_scale: 1000.
+  # crop_edge: 10
+  near: 0
+  far: 8.0

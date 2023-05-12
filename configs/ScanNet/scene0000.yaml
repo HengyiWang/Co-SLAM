@@ -1,0 +1,15 @@
+inherit_from: configs/ScanNet/scannet.yaml
+mapping:
+  bound: [[-0.1,8.6],[-0.1,8.9],[-0.3,3.3]]
+  marching_cubes_bound: [[-0.1,8.6],[-0.1,8.9],[-0.3,3.3]]
+  keyframe_every: 5
+
+grid:
+  hash_size: 16 # 1.59M
+  
+
+data:
+  datadir: ./data/scannet/scene0000_00
+  trainskip: 1
+  output: output/scannet/scene0000_00
+  exp_name: demo_mp_v2

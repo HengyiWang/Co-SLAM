@@ -1,0 +1,101 @@
+dataset: 'scannet'
+
+data:
+  downsample: 1
+  sc_factor: 1
+  translation: 0
+  num_workers: 4
+
+mapping:
+  sample: 2048
+  first_mesh: True
+  iters: 10
+  lr_embed: 0.01
+  lr_decoder: 0.01
+  lr_rot: 0.001
+  lr_trans: 0.001
+  keyframe_every: 5
+  map_every: 5
+  n_pixels: 0.05
+  first_iters: 500
+  optim_cur: False
+  min_pixels_cur: 20
+  map_accum_step: 1
+  pose_accum_step: 5
+  map_wait_step: 0
+  filter_depth: False
+
+tracking:
+  iter: 10
+  sample: 1024
+  pc_samples: 40960
+  lr_rot: 0.001
+  lr_trans: 0.001
+  ignore_edge_W: 20
+  ignore_edge_H: 20
+  iter_point: 0
+  wait_iters: 100
+  const_speed: True
+  best: True
+
+grid:
+  enc: 'HashGrid'
+  tcnn_encoding: True
+  hash_size: 19
+  voxel_color: 0.08
+  voxel_sdf: 0.04
+  oneGrid: True
+
+pos:
+  enc: 'OneBlob'
+  n_bins: 16
+
+decoder:
+  geo_feat_dim: 15
+  hidden_dim: 32
+  num_layers: 2
+  num_layers_color: 2
+  hidden_dim_color: 32
+  tcnn_network: False
+
+cam:
+  H: 480
+  W: 640
+  fx: 577.590698
+  fy: 578.729797
+  cx: 318.905426
+  cy: 242.683609
+  png_depth_scale: 1000. 
+  crop_edge: 10
+  near: 0
+  far: 8
+  depth_trunc: 100.
+
+training:
+  rgb_weight: 5.0
+  depth_weight: 0.1
+  sdf_weight: 1000
+  fs_weight: 10
+  eikonal_weight: 0
+  smooth_weight: 0.001 #0.001
+  smooth_pts: 64
+  smooth_vox: 0.1
+  smooth_margin: 0.05
+  #n_samples: 256
+  n_samples_d: 96
+  range_d: 0.25
+  n_range_d: 21
+  n_importance: 0
+  perturb: 1
+  white_bkgd: False
+  trunc: 0.1
+  rot_rep: 'quat'
+  rgb_missing: 0.0
+
+mesh:
+  resolution: 512
+  vis: 500
+  voxel_eval: 0.05
+  voxel_final: 0.03
+  visualisation: False
+  

@@ -1,0 +1,11 @@
+inherit_from: configs/Synthetic/synthetic.yaml
+mapping:
+  bound: [[-0.7, 5.4],[-0.2, 3.1],[-3.9, 0.8]] # [[-0.7, 5.4],[-0.2, 3.1],[-3.9, 0.8]]
+  marching_cubes_bound: [[-0.7, 5.4],[-0.2, 3.1],[-3.9, 0.8]] # [[-0.7, 5.4],[-0.2, 3.1],[-3.9, 0.8]]
+  
+
+data:
+  datadir: data/neural_rgbd_data/grey_white_room
+  trainskip: 1
+  output: output/Synthetic/gwr
+  exp_name: demo

@@ -1,0 +1,10 @@
+inherit_from: configs/Azure/azure.yaml
+mapping:
+  bound: [[-1.5,3.5],[-4.5,3.6],[-6.5,8.]]
+  marching_cubes_bound: [[-1.5,3.5],[-4.5,3.6],[-6.5,8.]]
+
+data:
+  datadir: data/Apartment
+  trainskip: 1
+  output: output/Apartment
+  exp_name: demo

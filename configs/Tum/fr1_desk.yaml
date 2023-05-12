@@ -1,0 +1,20 @@
+inherit_from: configs/Tum/tum.yaml
+mapping:
+  bound: [[-3.5,3],[-3,3],[-3,3]]
+  marching_cubes_bound: [[-3.5,3],[-3,3],[-3,3]]
+data:
+  datadir: data/TUM/rgbd_dataset_freiburg1_desk
+  trainskip: 1
+  output: output/TUM/fr_desk
+  exp_name: demo
+
+cam:  #intrinsic is different per scene in TUM
+  H: 480 
+  W: 640 
+  fx: 517.3
+  fy: 516.5
+  cx: 318.6
+  cy: 255.3
+  crop_edge: 8
+  crop_size: [384,512]
+  distortion: [0.2624, -0.9531, -0.0054, 0.0026, 1.1633]
