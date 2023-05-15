@@ -107,6 +107,7 @@ class CoSLAM():
         Save the model parameters and the estimated pose
         '''
         save_dict = {'pose': self.est_c2w_data,
+                     'pose_rel': self.est_c2w_data_rel,
                      'model': self.model.state_dict()}
         torch.save(save_dict, save_path)
         print('Save the checkpoint')
@@ -118,6 +119,7 @@ class CoSLAM():
         dict = torch.load(load_path)
         self.model.load_state_dict(dict['model'])
         self.est_c2w_data = dict['pose']
+        self.est_c2w_data_rel = dict['pose_rel']
 
     def select_samples(self, H, W, samples):
         '''

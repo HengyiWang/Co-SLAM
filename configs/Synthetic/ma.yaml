@@ -1,15 +1,11 @@
 inherit_from: configs/Synthetic/synthetic.yaml
 mapping:
-  bound: [[-0.7, 5.4],[-0.2, 3.1],[-3.9, 0.8]] # [[-0.7, 5.4],[-0.2, 3.1],[-3.9, 0.8]]
-  marching_cubes_bound: [[-0.7, 5.4],[-0.2, 3.1],[-3.9, 0.8]] # [[-0.7, 5.4],[-0.2, 3.1],[-3.9, 0.8]]
+  bound: [[-1.5, 2.2],[-0.3, 2.2],[-2.3, 1.9]]
+  marching_cubes_bound: [[-1.5, 2.2],[-0.3, 2.2],[-2.3, 1.9]]
   
 
 data:
-  datadir: data/neural_rgbd_data/grey_white_room
+  datadir: data/neural_rgbd_data/morning_apartment
   trainskip: 1
-  output: output/Synthetic/gwr
+  output: output/Synthetic/ma
   exp_name: demo
-
-cam:
-  near: 0
-  far: 8
