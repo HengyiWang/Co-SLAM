@@ -22,7 +22,7 @@ This repository contains the code for the paper Co-SLAM: Joint Coordinate and Sp
 
 - [x] Code for Co-SLAM [2023-5-12]
 - [x] Code for offline RGB-D reconstruction [click here](https://github.com/HengyiWang/Hybrid-Surf). [2023-5-12]
-- [ ] Code for evaluation strategy, performance analysis [click here](https://github.com/JingwenWang95/neural_slam_eval).
+- [x] Code for evaluation strategy, performance analysis [click here](https://github.com/JingwenWang95/neural_slam_eval). [2023-5-18]
 - [ ] Tutorials on creating sequences using iPhone/iPad Pro
 
 ## Installation
