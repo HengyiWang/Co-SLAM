@@ -1,0 +1,12 @@
+inherit_from: configs/IPhone/iphone.yaml
+mapping:
+  bound: [[-2,2],[-1.2,0.1],[-3.5,1.2]]
+  marching_cubes_bound: [[-2,2],[-1.2,0.1],[-2,1.2]]
+data:
+  datadir: ./data/iphone/statue
+  trainskip: 1
+  output: output/statue
+  exp_name: demo
+cam:
+  far: 5
+  depth_trunc: 5
