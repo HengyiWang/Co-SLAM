@@ -49,12 +49,12 @@ def getVoxels(x_max, x_min, y_max, y_min, z_max, z_min, voxel_size=None, resolut
 
     return tx, ty, tz
 
-def get_batch_query_fn(query_fn, num_args=1):
+def get_batch_query_fn(query_fn, num_args=1, device=None):
 
     if num_args == 1:
-        fn = lambda f, i0, i1: query_fn(f[i0:i1, None, :])
+        fn = lambda f, i0, i1: query_fn(f[i0:i1, None, :].to(device))
     else:
-        fn = lambda f, f1, i0, i1: query_fn(f[i0:i1, None, :], f1[i0:i1, :])
+        fn = lambda f, f1, i0, i1: query_fn(f[i0:i1, None, :].to(device), f1[i0:i1, :].to(device))
 
 
     return fn
@@ -77,12 +77,13 @@ def extract_mesh(query_fn, config, bounding_box, marching_cube_bound=None, color
 
     
     sh = query_pts.shape
-    flat = query_pts.reshape([-1, 3]).to(bounding_box[:, 0])
+    flat = query_pts.reshape([-1, 3])
+    bounding_box_cpu = bounding_box.cpu()
 
     if config['grid']['tcnn_encoding']:
-        flat = (flat - bounding_box[:, 0]) / (bounding_box[:, 1] - bounding_box[:, 0])
+        flat = (flat - bounding_box_cpu[:, 0]) / (bounding_box_cpu[:, 1] - bounding_box_cpu[:, 0])
 
-    fn = get_batch_query_fn(query_fn)
+    fn = get_batch_query_fn(query_fn, device=bounding_box.device)
 
     chunk = 1024 * 64
     raw = [fn(flat, i, i + chunk).cpu().data.numpy() for i in range(0, flat.shape[0], chunk)]
