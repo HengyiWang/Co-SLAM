@@ -12,7 +12,7 @@ def get_encoder(encoding, input_dim=3,
     # Dense grid encoding
     if 'dense' in encoding.lower():
         n_levels = 4
-        per_level_scale = np.exp2(np.log2(desired_resolution  / n_levels) / (n_levels - 1))
+        per_level_scale = np.exp2(np.log2(desired_resolution  / base_resolution) / (n_levels - 1))
         embed = tcnn.Encoding(
             n_input_dims=input_dim,
             encoding_config={
@@ -30,7 +30,7 @@ def get_encoder(encoding, input_dim=3,
     # Sparse grid encoding
     elif 'hash' in encoding.lower() or 'tiled' in encoding.lower():
         print('Hash size', log2_hashmap_size)
-        per_level_scale = np.exp2(np.log2(desired_resolution  / n_levels) / (n_levels - 1))
+        per_level_scale = np.exp2(np.log2(desired_resolution  / base_resolution) / (n_levels - 1))
         embed = tcnn.Encoding(
             n_input_dims=input_dim,
             encoding_config={
