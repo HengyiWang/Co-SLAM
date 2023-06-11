@@ -112,7 +112,7 @@ def extract_mesh(query_fn, config, bounding_box, marching_cube_bound=None, color
     vertices[:, :3] = vertices[:, :3] / config['data']['sc_factor'] - config['data']['translation']
 
 
-    if color_func is not None:
+    if color_func is not None and not config['mesh']['render_color']:
         if config['grid']['tcnn_encoding']:
             vert_flat = (torch.from_numpy(vertices).to(bounding_box) - bounding_box[:, 0]) / (bounding_box[:, 1] - bounding_box[:, 0])
 
@@ -127,6 +127,20 @@ def extract_mesh(query_fn, config, bounding_box, marching_cube_bound=None, color
         raw = np.concatenate(raw, 0).astype(np.float32)
         color = np.reshape(raw, list(sh[:-1]) + [-1])
         mesh = trimesh.Trimesh(vertices, triangles, process=False, vertex_colors=color)
+    
+    elif color_func is not None and config['mesh']['render_color']:
+        print('rendering surface color')
+        mesh = trimesh.Trimesh(vertices, triangles, process=False)
+        vertex_normals = torch.from_numpy(mesh.vertex_normals)
+        fn_color = get_batch_query_fn(color_func, 2, device=bounding_box.device)
+        raw = [fn_color(torch.from_numpy(vertices), vertex_normals,  i, i + chunk).cpu().data.numpy() for i in range(0, vertices.shape[0], chunk)]
+
+        sh = vertex_normals.shape
+        
+        raw = np.concatenate(raw, 0).astype(np.float32)
+        color = np.reshape(raw, list(sh[:-1]) + [-1])
+        mesh = trimesh.Trimesh(vertices, triangles, process=False, vertex_colors=color)
+
     else:
         # Create mesh
         mesh = trimesh.Trimesh(vertices, triangles, process=False)

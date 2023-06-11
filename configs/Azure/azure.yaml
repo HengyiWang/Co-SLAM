@@ -96,6 +96,7 @@ training:
 
 mesh:
   resolution: 512
+  render_color: False
   vis: 500
   voxel_eval: 0.05
   voxel_final: 0.03

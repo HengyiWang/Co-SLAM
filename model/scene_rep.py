@@ -177,6 +177,24 @@ class JointEncoding(nn.Module):
 
         return outputs
     
+    def render_surface_color(self, rays_o, normal):
+        '''
+        Render the surface color of the points.
+        Params:
+            points: [N_rays, 1, 3]
+            normal: [N_rays, 3]
+        '''
+        n_rays = rays_o.shape[0]
+        trunc = self.config['training']['trunc']
+        z_vals = torch.linspace(-trunc, trunc, steps=self.config['training']['n_range_d']).to(rays_o)
+        z_vals = z_vals.repeat(n_rays, 1)
+        # Run rendering pipeline
+        
+        pts = rays_o[...,:] + normal[...,None,:] * z_vals[...,:,None] # [N_rays, N_samples, 3]
+        raw = self.run_network(pts)
+        rgb, disp_map, acc_map, weights, depth_map, depth_var = self.raw2outputs(raw, z_vals, self.config['training']['white_bkgd'])
+        return rgb
+    
     def render_rays(self, rays_o, rays_d, target_d=None):
         '''
         Params:
