@@ -51,6 +51,7 @@ class CoSLAM():
         if self.config['training']['rot_rep'] == 'axis_angle':
             self.matrix_to_tensor = matrix_to_axis_angle
             self.matrix_from_tensor = at_to_transform_matrix
+            print('Using axis-angle as rotation representation, identity init would cause inf')
         
         elif self.config['training']['rot_rep'] == "quat":
             print("Using quaternion as rotation representation")
@@ -224,16 +225,6 @@ class CoSLAM():
 
         return loss
     
-    def freeze_model(self):
-        '''
-        Freeze the model parameters
-        '''
-        for param in self.model.embed_fn.parameters():
-            param.require_grad = False
-        
-        for param in self.model.decoder.parameters():
-            param.require_grad = False
-    
     def get_pose_param_optim(self, poses, mapping=True):
         task = 'mapping' if mapping else 'tracking'
         cur_trans = torch.nn.parameter.Parameter(poses[:, :3, 3])
@@ -381,10 +372,7 @@ class CoSLAM():
         c2w_gt = batch['c2w'][0].to(self.device)
 
         cur_c2w = self.predict_current_pose(frame_id, self.config['tracking']['const_speed'])
-        self.freeze_model()
 
-
-        indice = None
         cur_trans = torch.nn.parameter.Parameter(cur_c2w[..., :3, 3].unsqueeze(0))
         cur_rot = torch.nn.parameter.Parameter(self.matrix_to_tensor(cur_c2w[..., :3, :3]).unsqueeze(0))
         pose_optimizer = torch.optim.Adam([{"params": cur_rot, "lr": self.config['tracking']['lr_rot']},
@@ -480,8 +468,6 @@ class CoSLAM():
             cur_c2w = self.est_c2w_data[frame_id]
         else:
             cur_c2w = self.predict_current_pose(frame_id, self.config['tracking']['const_speed'])
-        self.freeze_model()
-
 
         indice = None
         best_sdf_loss = None

@@ -272,13 +272,17 @@ class CoSLAM():
     
     def save_mesh(self, i, voxel_size=0.05):
         mesh_savepath = os.path.join(self.config['data']['output'], self.config['data']['exp_name'], 'mesh_track{}.ply'.format(i))
+        if self.config['mesh']['render_color']:
+            color_func = self.model.render_surface_color
+        else:
+            color_func = self.model.query_color
         extract_mesh(self.model.query_sdf, 
                         self.config, 
                         self.bounding_box, 
-                        color_func=self.model.query_color, 
+                        color_func=color_func, 
                         marching_cube_bound=self.marching_cube_bound, 
                         voxel_size=voxel_size, 
-                        mesh_savepath=mesh_savepath)      
+                        mesh_savepath=mesh_savepath)       
         
     def get_pose_param_optim(self, poses, mapping=True):
         task = 'mapping' if mapping else 'tracking'

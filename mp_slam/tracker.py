@@ -26,16 +26,6 @@ class Tracker():
             self.model = copy.deepcopy(self.share_model).to(self.device)
             self.prev_mapping_idx = self.mapping_idx[0].clone()
     
-    def freeze_model(self):
-        '''
-        Freeze the model parameters
-        '''
-        for param in self.model.embed_fn.parameters():
-            param.require_grad = False
-        
-        for param in self.model.decoder.parameters():
-            param.require_grad = False
-    
     def predict_current_pose(self, frame_id, constant_speed=True):
         '''
         Predict current pose from previous pose using camera motion model
@@ -70,8 +60,6 @@ class Tracker():
             cur_c2w = self.est_c2w_data[frame_id]
         else:
             cur_c2w = self.predict_current_pose(frame_id, self.config['tracking']['const_speed'])
-        self.freeze_model()
-
 
         indice = None
         best_sdf_loss = None
