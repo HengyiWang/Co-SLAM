@@ -10,6 +10,7 @@ mapping:
   sample: 2048
   first_mesh: True
   iters: 10
+  cur_frame_iters: 0
   lr_embed: 0.001
   lr_decoder: 0.01
   lr_rot: 0.001

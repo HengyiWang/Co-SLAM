@@ -199,6 +199,49 @@ class CoSLAM():
         print('First frame mapping done')
         return ret, loss
 
+    def current_frame_mapping(self, batch, cur_frame_id):
+        '''
+        Current frame mapping
+        Params:
+            batch['c2w']: [1, 4, 4]
+            batch['rgb']: [1, H, W, 3]
+            batch['depth']: [1, H, W, 1]
+            batch['direction']: [1, H, W, 3]
+        Returns:
+            ret: dict
+            loss: float
+        
+        '''
+        if self.config['mapping']['cur_frame_iters'] <= 0:
+            return
+        print('Current frame mapping...')
+        
+        c2w = self.est_c2w_data[cur_frame_id].to(self.device)
+
+        self.model.train()
+
+        # Training
+        for i in range(self.config['mapping']['cur_frame_iters']):
+            self.cur_map_optimizer.zero_grad()
+            indice = self.select_samples(self.dataset.H, self.dataset.W, self.config['mapping']['sample'])
+            
+            indice_h, indice_w = indice % (self.dataset.H), indice // (self.dataset.H)
+            rays_d_cam = batch['direction'].squeeze(0)[indice_h, indice_w, :].to(self.device)
+            target_s = batch['rgb'].squeeze(0)[indice_h, indice_w, :].to(self.device)
+            target_d = batch['depth'].squeeze(0)[indice_h, indice_w].to(self.device).unsqueeze(-1)
+
+            rays_o = c2w[None, :3, -1].repeat(self.config['mapping']['sample'], 1)
+            rays_d = torch.sum(rays_d_cam[..., None, :] * c2w[:3, :3], -1)
+
+            # Forward
+            ret = self.model.forward(rays_o, rays_d, target_s, target_d)
+            loss = self.get_loss_from_ret(ret)
+            loss.backward()
+            self.cur_map_optimizer.step()
+        
+        
+        return ret, loss
+
     def smoothness(self, sample_points=256, voxel_size=0.1, margin=0.05, color=False):
         '''
         Smoothness loss of feature grid
@@ -554,6 +597,7 @@ class CoSLAM():
         '''
         Create optimizer for mapping
         '''
+        # Optimizer for BA
         trainable_parameters = [{'params': self.model.decoder.parameters(), 'weight_decay': 1e-6, 'lr': self.config['mapping']['lr_decoder']},
                                 {'params': self.model.embed_fn.parameters(), 'eps': 1e-15, 'lr': self.config['mapping']['lr_embed']}]
     
@@ -561,6 +605,15 @@ class CoSLAM():
             trainable_parameters.append({'params': self.model.embed_fn_color.parameters(), 'eps': 1e-15, 'lr': self.config['mapping']['lr_embed_color']})
         
         self.map_optimizer = optim.Adam(trainable_parameters, betas=(0.9, 0.99))
+        
+        # Optimizer for current frame mapping
+        if self.config['mapping']['cur_frame_iters'] > 0:
+            params_cur_mapping = [{'params': self.model.embed_fn.parameters(), 'eps': 1e-15, 'lr': self.config['mapping']['lr_embed']}]
+            if not self.config['grid']['oneGrid']:
+                params_cur_mapping.append({'params': self.model.embed_fn_color.parameters(), 'eps': 1e-15, 'lr': self.config['mapping']['lr_embed_color']})
+                 
+            self.cur_map_optimizer = optim.Adam(params_cur_mapping, betas=(0.9, 0.99))
+        
     
     def save_mesh(self, i, voxel_size=0.05):
         mesh_savepath = os.path.join(self.config['data']['output'], self.config['data']['exp_name'], 'mesh_track{}.ply'.format(i))
@@ -606,6 +659,7 @@ class CoSLAM():
                 self.tracking_render(batch, i)
     
                 if i%self.config['mapping']['map_every']==0:
+                    self.current_frame_mapping(batch, i)
                     self.global_BA(batch, i)
 
                     
