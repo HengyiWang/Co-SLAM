@@ -13,6 +13,9 @@ __pycache__/
 # DataSets
 /data
 
+# Outputs
+/output
+
 # generated files
 /external/**/_*.cpp
 external/**/_*.pyx
