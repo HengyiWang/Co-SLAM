@@ -72,8 +72,8 @@ class CoSLAM():
         '''
         Get the pre-defined bounds for the scene
         '''
-        self.bounding_box = torch.from_numpy(np.array(self.config['mapping']['bound'])).to(self.device)
-        self.marching_cube_bound = torch.from_numpy(np.array(self.config['mapping']['marching_cubes_bound'])).to(self.device)
+        self.bounding_box = torch.from_numpy(np.array(self.config['mapping']['bound'])).to(torch.float32).to(self.device)
+        self.marching_cube_bound = torch.from_numpy(np.array(self.config['mapping']['marching_cubes_bound'])).to(torch.float32).to(self.device)
 
     def create_kf_database(self, config):  
         '''
