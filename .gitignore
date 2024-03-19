@@ -10,6 +10,16 @@ __pycache__/
 # C extensions
 *.so
 
+# DataSets
+/data
+
+# Outputs
+/output
+
+# generated files
+/external/**/_*.cpp
+external/**/_*.pyx
+
 # Distribution / packaging
 .Python
 build/
